@@ -28,8 +28,8 @@ jobs:
         pip install -r requirements.txt --target=".python_packages/lib/site-packages"
         popd
       
-    - name: 'Run Python Tests'
-      run: python -m unittest discover crcGetCounter
+    #- name: 'Run Python Tests'
+    #  run: python -m unittest discover crcGetCounter
     
     - name: 'Run Azure Functions Action'
       uses: Azure/functions-action@v1
