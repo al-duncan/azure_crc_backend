@@ -20,5 +20,5 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     return func.HttpResponse(f"{count_entity['Counter']}")
 
 def updatecount(count_entity):
-    count_entity['Counter'] += 1
+    count_entity['Counter'] += 3
     return count_entity
