@@ -6,7 +6,6 @@ from azure.data.tables import UpdateMode
 
 import azure.functions as func
 
-
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
     
@@ -20,5 +19,5 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     return func.HttpResponse(f"{count_entity['Counter']}")
 
 def updatecount(count_entity):
-    count_entity['Counter'] += 3
+    count_entity['Counter'] += 1
     return count_entity
