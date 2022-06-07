@@ -1,0 +1,68 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "databaseAccounts_name": {
+            "defaultValue": "[format('table-{0}', uniqueString(resourceGroup().id))]",
+            "type": "String"
+        },
+        "databaseLocation": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String"
+        },
+        "tableName": {
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "functions": [],
+    "resources": [
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts",
+            "apiVersion": "2021-05-15",
+            "name": "[parameters('databaseAccounts_Name')]",
+            "location": "[resourceGroup().location]",
+            "tags": {},
+            "kind": "GlobalDocumentDB",
+            "properties": {
+                "consistencyPolicy": {
+                    "defaultConsistencyLevel": "BoundedStaleness",
+                    "maxIntervalInSeconds": 86400,
+                    "maxStalenessPrefix": 1000000
+                },
+                "locations": [
+                    {
+                        "locationName": "[parameters('databaseLocation')]",
+                        "failoverPriority": 0,
+                        "isZoneRedundant": false
+                    }
+                ],
+                "databaseAccountOfferType": "Standard",
+                "enableFreeTier": true,
+                "enableAutomaticFailover": false,
+                "capabilities": [
+                    {
+                        "name": "EnableTable"
+                    },
+                    {
+                        "name": "EnableServerless"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/apis/tables",
+            "apiVersion": "2016-03-31",
+            "name": "[concat(parameters('databaseAccounts_Name'), '/table/', parameters('tableName'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/', parameters('databaseAccounts_name'))]"
+            ],
+            "properties": {
+                "options": {},
+                "resource": {
+                    "id": "[parameters('tableName')]"
+                }
+            }
+        }
+    ]
+}
