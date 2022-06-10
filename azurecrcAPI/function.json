@@ -1,5 +1,5 @@
 {
-  "scriptFile": "crcGetCounter.py",
+  "scriptFile": "azurecrcAPI.py",
   "bindings": [
     {
       "authLevel": "Function",
