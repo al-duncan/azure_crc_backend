@@ -1,5 +1,5 @@
 import unittest
-from crcGetCounter import updatecount
+from azurecrcAPI import updatecount
  
 class TestCounter(unittest.TestCase):
 
