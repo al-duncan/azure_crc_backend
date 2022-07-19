@@ -52,7 +52,8 @@
     "variables": {
         "storageAccountName": "[toLower(concat(uniquestring(resourceGroup().id), parameters('functionAppName')))]",
         "hostingPlanName": "[parameters('functionAppName')]",
-        "applicationInsightsName": "[parameters('functionAppName')]"
+        "applicationInsightsName": "[parameters('functionAppName')]",
+        "databaseAccounts_name": "crc-db"
     },
     "resources": [
         {
@@ -132,6 +133,10 @@
                         {
                             "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
                             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';EndpointSuffix=', environment().suffixes.storage, ';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value)]"
+                        },
+                         {
+                            "name": "AzureWebJobsVisitorCounter",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('databaseAccounts_name'), ';TableEndpoint=https://', variables('databaseAccounts_name'),'.table.cosmos.azure.com:443/;AccountKey=',listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('databaseAccounts_name')), '2019-12-12').keys[0].value)]"
                         },
                         {
                             "name": "WEBSITE_CONTENTSHARE",
