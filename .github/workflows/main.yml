@@ -9,7 +9,21 @@ env:
   PYTHON_VERSION: '3.9'                 # set this to the Python version
   
 jobs:
-  build-and-deploy:
+  # This workflow contains 2 jobs, first it deploys the infrastructure then it deploys the function app
+  build-and-deploy-infrastructure:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@main
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+    - uses: azure/arm-deploy@v1
+      with:
+        template: ./infrastructure/azuredeploydb.json
+        parameters: ./infrastructure/azuredeploydb.parameters.json
+        
+
+  build-and-deploy-function-app:
     runs-on: ubuntu-latest
     steps:
     - name: 'Checkout GitHub Action'
