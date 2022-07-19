@@ -14,15 +14,27 @@ jobs:
   build-and-deploy-infrastructure:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: azure/login@v1
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v2
+
+    - name: 'Azure Login'
+      uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-    - uses: azure/arm-deploy@v1
+
+    - name: Depoy DB ARM Template    
+      uses: azure/arm-deploy@v1
       with:
         resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
         template: ./infrastructure/azuredeploydb.json
         parameters: ./infrastructure/azuredeploydb.parameters.json
+
+    - name: Depoy Function ARM Template    
+      uses: azure/arm-deploy@v1
+      with:
+        resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
+        template: ./infrastructure/azuredeployfunc.json
+        parameters: ./infrastructure/azuredeployfunc.parameters.json
         
 
   build-and-deploy-function-app:
