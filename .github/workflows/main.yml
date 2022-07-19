@@ -1,9 +1,8 @@
 name: Deploy infrastructure and code for function app
 
 on:
-  pull_request:
+  push:
     branches: [ "main" ]
-    types: [ "closed" ]
 
 env:
   AZURE_RESOURCEGROUP_NAME: CRC
@@ -14,10 +13,6 @@ env:
 jobs:
   
   build-and-deploy-infrastructure:
-    #check the pull request was merged before we do anything
-    if_merged:
-      if: github.event.pull_request.merged == true
-
     runs-on: ubuntu-latest
     steps:
     - name: 'Checkout GitHub Action'
@@ -44,11 +39,7 @@ jobs:
         
 
   build-and-deploy-function-app:
-    needs: build-and-deploy-infrastructure
-    #check the pull request was merged before we do anything
-    if_merged:
-      if: github.event.pull_request.merged == true
-      
+    needs: build-and-deploy-infrastructure  
     runs-on: ubuntu-latest
     steps:
     - name: 'Checkout GitHub Action'
