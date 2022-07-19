@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@main
     - uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
     - uses: azure/arm-deploy@v1
       with:
         template: ./infrastructure/azuredeploydb.json
