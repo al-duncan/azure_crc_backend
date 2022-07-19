@@ -5,6 +5,9 @@
         "functionAppName": {
             "value": "azurecrcAPI"
         },
+        "location": {
+            "value": "[resourceGroup().location]"
+        },
         "storageAccountType": {
             "value": "Standard_LRS"
         },
