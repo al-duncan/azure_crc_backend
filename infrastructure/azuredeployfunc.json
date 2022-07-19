@@ -104,6 +104,12 @@
             "properties": {
                 "reserved": true,
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+                "cors": {
+                    "allowedOrigins": [
+                        "https://cv.theduncans.uk",
+                        "https://azure-crc.theduncans.uk"
+                    ]
+                },
                 "siteConfig": {
                     "linuxFxVersion": "[parameters('linuxFxVersion')]",
                     "appSettings": [
