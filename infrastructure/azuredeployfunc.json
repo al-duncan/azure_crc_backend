@@ -136,7 +136,7 @@
                         },
                          {
                             "name": "AzureWebJobsVisitorCounter",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('databaseAccounts_name'), ';TableEndpoint=https://', variables('databaseAccounts_name'),'.table.cosmos.azure.com:443/;AccountKey=',listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('databaseAccounts_name')), '2019-12-12').keys[0].value)]"
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('databaseAccounts_name'), ';TableEndpoint=https://', variables('databaseAccounts_name'),'.table.cosmos.azure.com:443/;AccountKey=',listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('databaseAccounts_name')), '2019-12-12').connectionStrings[0].connectionString)]"
                         },
                         {
                             "name": "WEBSITE_CONTENTSHARE",
