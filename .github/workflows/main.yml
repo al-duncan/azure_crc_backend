@@ -1,8 +1,9 @@
-name: Deploy infrastructure and function app
+name: Deploy infrastructure and code for function app
 
 on:
-  push:
+  pull_request:
     branches: [ "main" ]
+    types: [ "closed" ]
 
 env:
   AZURE_RESOURCEGROUP_NAME: CRC
@@ -11,61 +12,64 @@ env:
   PYTHON_VERSION: '3.9'                 # set this to the Python version
   
 jobs:
-  # This workflow contains 2 jobs, first it deploys the infrastructure then it deploys the function app
-  build-and-deploy-infrastructure:
-    runs-on: ubuntu-latest
-    steps:
-    - name: 'Checkout GitHub Action'
-      uses: actions/checkout@v2
+  #check the pull request was merged before we do anything
+  if_merged:
+    if: github.event.pull_request.merged == true
 
-    - name: 'Azure Login'
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    build-and-deploy-infrastructure:
+      runs-on: ubuntu-latest
+      steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v2
 
-    - name: Depoy DB ARM Template    
-      uses: azure/arm-deploy@v1
-      with:
-        resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
-        template: ./infrastructure/azuredeploydb.json
-        parameters: ./infrastructure/azuredeploydb.parameters.json
+      - name: 'Azure Login'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Depoy Function ARM Template    
-      uses: azure/arm-deploy@v1
-      with:
-        resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
-        template: ./infrastructure/azuredeployfunc.json
-        parameters: ./infrastructure/azuredeployfunc.parameters.json
-        
+      - name: Depoy DB ARM Template    
+        uses: azure/arm-deploy@v1
+        with:
+          resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
+          template: ./infrastructure/azuredeploydb.json
+          parameters: ./infrastructure/azuredeploydb.parameters.json
 
-  build-and-deploy-function-app:
-    needs: build-and-deploy-infrastructure
-    runs-on: ubuntu-latest
-    steps:
-    - name: 'Checkout GitHub Action'
-      uses: actions/checkout@v2
+      - name: Depoy Function ARM Template    
+        uses: azure/arm-deploy@v1
+        with:
+          resourceGroupName: ${{ env.AZURE_RESOURCEGROUP_NAME }}
+          template: ./infrastructure/azuredeployfunc.json
+          parameters: ./infrastructure/azuredeployfunc.parameters.json
+          
 
-    - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
+    build-and-deploy-function-app:
+      needs: build-and-deploy-infrastructure
+      runs-on: ubuntu-latest
+      steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v2
 
-    - name: 'Resolve Project Dependencies Using Pip'
-      shell: bash
-      run: |
-        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt --target=".python_packages/lib/site-packages"
-        popd
-    
-    ## uncomment to run python tests once I figure out why azure.data.tables module isn't being found
-    #- name: 'Run Python Tests'
-    #  run: python -m unittest discover azurecrcAPI
+      - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
 
-    - name: 'Run Azure Functions Action'
-      uses: Azure/functions-action@v1
-      id: fa
-      with:
-        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+      - name: 'Resolve Project Dependencies Using Pip'
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+          popd
+      
+      ## uncomment to run python tests once I figure out why azure.data.tables module isn't being found
+      #- name: 'Run Python Tests'
+      #  run: python -m unittest discover azurecrcAPI
+
+      - name: 'Run Azure Functions Action'
+        uses: Azure/functions-action@v1
+        id: fa
+        with:
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
