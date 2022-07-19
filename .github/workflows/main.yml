@@ -1,7 +1,8 @@
 name: Deploy Python project to function app
 
 on:
-  [push]
+  push:
+    branches: [ "main" ]
 
 env:
   AZURE_RESOURCEGROUP_NAME: CRC
