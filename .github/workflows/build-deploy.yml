@@ -14,9 +14,9 @@ jobs:
 
   create-SBOM:
     runs-on: ubuntu-latest
-      steps:
-      - name: 'Generate SBOM using Syft'
-        uses: anchore/sbom-action@v0
+    steps:
+    - name: 'Generate SBOM using Syft'
+      uses: anchore/sbom-action@v0
   
   build-and-deploy-infrastructure:
     runs-on: ubuntu-latest
