@@ -95,7 +95,7 @@
         {
             "name": "[parameters('functionAppName')]",
             "type": "Microsoft.Web/sites",
-            "apiVersion": "2021-02-01",
+            "apiVersion": "2021-03-01",
             "location": "[parameters('location')]",
             "kind": "functionapp,linux",
             "dependsOn": [
@@ -105,11 +105,6 @@
             "properties": {
                 "reserved": true,
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
-                "cors": {
-                    "allowedOrigins": [
-                        "https://test.theduncans.uk"
-                    ]
-                },
                 "siteConfig": {
                     "linuxFxVersion": "[parameters('linuxFxVersion')]",
                     "appSettings": [
@@ -142,6 +137,12 @@
                             "value": "[toLower(parameters('functionAppName'))]"
                         }
                     ]
+                },
+                "cors": {
+                    "allowedOrigins": [
+                        "https://test.theduncans.uk" 
+                    ],
+                    "supportedCredentials": "false"
                 }
             }
         }
