@@ -137,12 +137,6 @@
                             "value": "[toLower(parameters('functionAppName'))]"
                         }
                     ]
-                },
-                "cors": {
-                    "allowedOrigins": [
-                        "https://test.theduncans.uk" 
-                    ],
-                    "supportedCredentials": "false"
                 }
             }
         }
