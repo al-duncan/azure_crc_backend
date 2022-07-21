@@ -107,8 +107,7 @@
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
                 "cors": {
                     "allowedOrigins": [
-                        "https://cv.theduncans.uk",
-                        "https://azure-crc.theduncans.uk"
+                        "https://test.theduncans.uk"
                     ]
                 },
                 "siteConfig": {
