@@ -17,6 +17,8 @@ jobs:
     steps:
     - name: 'Generate SBOM using Syft'
       uses: anchore/sbom-action@v0
+      with:
+        path: ./azurecrcAPI/
   
   build-and-deploy-infrastructure:
     runs-on: ubuntu-latest
