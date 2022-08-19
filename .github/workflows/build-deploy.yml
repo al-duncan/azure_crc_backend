@@ -11,14 +11,6 @@ env:
   PYTHON_VERSION: '3.9'                 # set this to the Python version
   
 jobs:
-
-  create-SBOM:
-    runs-on: ubuntu-latest
-    steps:
-    - name: 'Generate SBOM using Syft'
-      uses: anchore/sbom-action@v0
-      with:
-        path: ./azurecrcAPI/
   
   build-and-deploy-infrastructure:
     runs-on: ubuntu-latest
@@ -65,6 +57,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt --target=".python_packages/lib/site-packages"
         popd
+
+    - name: 'Generate SBOM using Syft'
+      uses: anchore/sbom-action@v0
     
     ## uncomment to run python tests once I figure out why azure.data.tables module isn't being found
     #- name: 'Run Python Tests'
