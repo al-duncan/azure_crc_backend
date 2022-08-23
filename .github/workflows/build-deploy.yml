@@ -58,8 +58,11 @@ jobs:
         pip install -r requirements.txt --target=".python_packages/lib/site-packages"
         popd
 
-    - name: 'Generate SBOM using Syft'
+    - name: 'Generate SBOM'
       uses: anchore/sbom-action@v0
+      with:
+        format: spdx-json
+        output-file: "${{ github.event.repository.name }}-sbom.spdx.json"
     
     ## uncomment to run python tests once I figure out why azure.data.tables module isn't being found
     #- name: 'Run Python Tests'
