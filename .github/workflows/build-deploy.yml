@@ -63,6 +63,11 @@ jobs:
       with:
         format: spdx-json
         output-file: "${{ github.event.repository.name }}-sbom.spdx.json"
+
+    - name: Scan SBOM
+      uses: anchore/scan-action@v3
+      with:
+        sbom: "${{ github.event.repository.name }}-sbom.spdx.json"
     
     ## uncomment to run python tests once I figure out why azure.data.tables module isn't being found
     #- name: 'Run Python Tests'
